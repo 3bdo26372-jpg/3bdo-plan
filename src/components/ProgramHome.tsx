@@ -1,12 +1,16 @@
 import { motion } from 'framer-motion'
 import { Calendar, Dumbbell, Flame, Moon, Zap } from 'lucide-react'
 import { heroStats, importantNotes, trainingDays, weeklySplit } from '../data'
+import { ThemePicker } from './ThemePicker'
+import type { ThemeId } from '../theme'
 
 interface Props {
   onSelectDay: (id: string) => void
+  themeId: ThemeId
+  onThemeChange: (id: ThemeId) => void
 }
 
-export function ProgramHome({ onSelectDay }: Props) {
+export function ProgramHome({ onSelectDay, themeId, onThemeChange }: Props) {
   return (
     <div className="home-shell">
       {/* Nav */}
@@ -15,7 +19,10 @@ export function ProgramHome({ onSelectDay }: Props) {
           <Dumbbell />
           <span>3bdo</span>
         </div>
-        <span className="nav-tag">Upper / Lower Program</span>
+        <div className="nav-right">
+          <span className="nav-tag">Upper / Lower Program</span>
+          <ThemePicker activeId={themeId} onSelect={onThemeChange} />
+        </div>
       </nav>
 
       {/* Hero */}

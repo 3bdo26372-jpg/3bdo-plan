@@ -1,3 +1,6 @@
+import { lighten, mix } from '../lib/color'
+import type { ThemeDef } from '../theme'
+
 type Variant = 'home' | 'upper' | 'lower'
 type Icon = 'db' | 'bb' | 'kb'
 
@@ -83,14 +86,15 @@ function KettlebellSVG() {
 
 const ICONS = { db: DumbbellSVG, bb: BodybuilderSVG, kb: KettlebellSVG }
 
-const COLORS: Record<Variant, string[]> = {
-  home:  ['#00ff88', '#00c8ff', '#a78bfa'],
-  upper: ['#00c8ff', '#4d9fff', '#00e5ff'],
-  lower: ['#00ff88', '#00e87a', '#00d4ff'],
+function paletteFor(variant: Variant, theme: ThemeDef): string[] {
+  const { primary, secondary } = theme
+  if (variant === 'upper') return [secondary, lighten(secondary, 0.3), mix(secondary, primary, 0.3)]
+  if (variant === 'lower') return [primary, lighten(primary, 0.25), mix(primary, secondary, 0.4)]
+  return [primary, secondary, mix(primary, secondary, 0.5)]
 }
 
-export function Background({ variant = 'home' }: { variant?: Variant }) {
-  const palette = COLORS[variant]
+export function Background({ variant = 'home', theme }: { variant?: Variant; theme: ThemeDef }) {
+  const palette = paletteFor(variant, theme)
 
   return (
     <div className={`bg-canvas ${variant}`} aria-hidden="true">

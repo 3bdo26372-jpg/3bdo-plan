@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Background } from './components/Background'
 import { ProgramHome } from './components/ProgramHome'
 import { DayPage } from './components/DayPage'
 import { trainingDays } from './data'
+import { applyTheme, getTheme, THEME_STORAGE_KEY, type ThemeId } from './theme'
 
 type Dir = 1 | -1 | 0
 
@@ -26,6 +27,16 @@ const variants = {
 function App() {
   const [activeDayId, setActiveDayId] = useState<string | null>(null)
   const [dir, setDir] = useState<Dir>(0)
+  const [themeId, setThemeId] = useState<ThemeId>(() => {
+    const stored = localStorage.getItem(THEME_STORAGE_KEY)
+    return getTheme(stored).id
+  })
+  const theme = getTheme(themeId)
+
+  useEffect(() => {
+    applyTheme(theme)
+    localStorage.setItem(THEME_STORAGE_KEY, themeId)
+  }, [themeId])
 
   const activeDay = trainingDays.find(d => d.id === activeDayId) ?? null
   const activeIndex = trainingDays.findIndex(d => d.id === activeDayId)
@@ -48,7 +59,7 @@ function App() {
 
   return (
     <div className="app-root">
-      <Background variant={bgVariant} />
+      <Background variant={bgVariant} theme={theme} />
       <AnimatePresence mode="wait" custom={dir}>
         {!activeDay ? (
           <motion.div
@@ -61,7 +72,7 @@ function App() {
             transition={{ duration: 0.4, ease: [0.33, 1, 0.68, 1] }}
             className="page-wrap"
           >
-            <ProgramHome onSelectDay={openDay} />
+            <ProgramHome onSelectDay={openDay} themeId={themeId} onThemeChange={setThemeId} />
           </motion.div>
         ) : (
           <motion.div
@@ -83,6 +94,8 @@ function App() {
               onBack={goBack}
               onPrev={goPrev}
               onNext={goNext}
+              themeId={themeId}
+              onThemeChange={setThemeId}
             />
           </motion.div>
         )}
