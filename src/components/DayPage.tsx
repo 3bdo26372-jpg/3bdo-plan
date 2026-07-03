@@ -3,8 +3,6 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, ChevronLeft, Flame, LayoutGrid, Trophy } from 'lucide-react'
 import type { TrainingDay } from '../data'
 import { ExerciseRow } from './ExerciseRow'
-import { ThemePicker } from './ThemePicker'
-import type { ThemeId } from '../theme'
 
 interface Props {
   day: TrainingDay
@@ -15,11 +13,9 @@ interface Props {
   onBack: () => void
   onPrev: () => void
   onNext: () => void
-  themeId: ThemeId
-  onThemeChange: (id: ThemeId) => void
 }
 
-export function DayPage({ day, index, total, hasPrev, hasNext, onBack, onPrev, onNext, themeId, onThemeChange }: Props) {
+export function DayPage({ day, index, total, hasPrev, hasNext, onBack, onPrev, onNext }: Props) {
   const [checked, setChecked] = useState<Set<number>>(new Set())
   const isUpper = day.title.toLowerCase().startsWith('upper')
   const progress = day.exercises.length > 0 ? (checked.size / day.exercises.length) * 100 : 0
@@ -62,7 +58,6 @@ export function DayPage({ day, index, total, hasPrev, hasNext, onBack, onPrev, o
           <button onClick={onNext} disabled={!hasNext} aria-label="Next day">
             <ArrowRight size={16} />
           </button>
-          <ThemePicker activeId={themeId} onSelect={onThemeChange} />
         </div>
       </div>
 
