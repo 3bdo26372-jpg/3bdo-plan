@@ -1,127 +1,192 @@
 import { motion } from 'framer-motion'
-import { Calendar, Dumbbell, Flame, Moon, Zap } from 'lucide-react'
-import { heroStats, importantNotes, trainingDays, weeklySplit } from '../data'
+import { ArrowRight, BarChart2, Bike, Calendar, Dumbbell, Flame, Timer, Zap } from 'lucide-react'
+import { heroStats, importantNotes, trainingDays, weeklyVolume } from '../data'
+import { gifUrl, todayName, totalSets } from '../lib/format'
 
 interface Props {
   onSelectDay: (id: string) => void
 }
 
+const VOLUME_SCALE = 24
+
+function parseRange(target: string): [number, number] {
+  const [lo, hi] = target.split(/[–-]/).map(Number)
+  return [lo, hi ?? lo]
+}
+
 export function ProgramHome({ onSelectDay }: Props) {
+  const today = trainingDays.find(d => d.day === todayName()) ?? trainingDays[0]
+  const weekSets = trainingDays.reduce((sum, d) => sum + totalSets(d.exercises), 0)
+  const weekCardio = trainingDays.reduce((sum, d) => sum + d.cardio.duration, 0)
+
   return (
     <div className="home-shell">
-      {/* Nav */}
       <nav className="home-nav">
         <div className="nav-brand">
           <Dumbbell />
           <span>3bdo</span>
         </div>
-        <span className="nav-tag">Upper / Lower Program</span>
+        <span className="nav-tag">7-Day V-Taper Program</span>
       </nav>
 
-      {/* Hero */}
-      <motion.section
-        className="home-hero"
-        initial={{ opacity: 0, y: 32 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
-      >
-        <div className="hero-eyebrow"><Flame size={14} /><span>Fat Loss · Muscle Retention</span></div>
-        <h1 className="hero-h1">Your <span>Program.</span></h1>
-        <p className="hero-sub">180 cm · 116 kg · 6 days / week · Low-back aware · No cardio inside split</p>
-        <div className="hero-chips">
-          {heroStats.map((s, i) => (
-            <motion.span
-              key={s}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.3 + i * 0.06 }}
-            >
-              {s}
-            </motion.span>
-          ))}
-        </div>
-      </motion.section>
+      <section className="home-hero">
+        <motion.div
+          className="hero-copy"
+          initial={{ opacity: 0, y: 32 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
+        >
+          <div className="hero-eyebrow"><Flame size={14} /><span>Muscle Build · V-Taper · Daily Cardio</span></div>
+          <h1 className="hero-h1">Your <span>Program.</span></h1>
+          <p className="hero-sub">180 cm · 120 kg · 7 days / week · Max 60 min · Low-back aware</p>
+          <div className="hero-chips">
+            {heroStats.map((s, i) => (
+              <motion.span
+                key={s}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.3 + i * 0.06 }}
+              >
+                {s}
+              </motion.span>
+            ))}
+          </div>
+          <div className="hero-numbers">
+            <div><strong>7</strong><span>Training days</span></div>
+            <div><strong>{weekSets}</strong><span>Sets / week</span></div>
+            <div><strong>{weekCardio}</strong><span>Cardio min</span></div>
+          </div>
+        </motion.div>
 
-      {/* Day grid */}
+        <motion.button
+          className={`today-card ${today.variant}`}
+          onClick={() => onSelectDay(today.id)}
+          initial={{ opacity: 0, y: 32, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.55, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
+          whileHover={{ y: -4 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <span className="today-label"><span className="pulse-dot" />Today · {today.day}</span>
+          <span className="today-title">{today.title}</span>
+          <span className="today-focus">{today.focus}</span>
+          <span className="today-meta">
+            <span><Zap size={13} />{today.exercises.length} exercises</span>
+            <span><Bike size={13} />{today.cardio.duration} min cardio</span>
+            <span><Timer size={13} />~{today.estimatedDuration} min</span>
+          </span>
+          <span className="today-thumbs">
+            {today.exercises.slice(0, 4).map(ex => ex.gif && (
+              <img key={ex.name} src={gifUrl(ex.gif)} alt="" loading="lazy" />
+            ))}
+          </span>
+          <span className="today-cta">View today's workout <ArrowRight size={16} /></span>
+        </motion.button>
+      </section>
+
       <section className="days-grid-section">
-        <div className="section-label"><Calendar size={14} /><span>Select a Workout Day</span></div>
+        <div className="section-label"><Calendar size={14} /><span>The Week</span></div>
         <div className="days-grid">
-          {weeklySplit.map((split, i) => {
-            const trainingDay = trainingDays.find(d => d.day === split.day)
-            const isRest = split.plan === 'Rest'
-            const variant = isRest
-              ? 'rest'
-              : split.plan.toLowerCase().startsWith('upper')
-              ? 'upper'
-              : 'lower'
-
+          {trainingDays.map((day, i) => {
+            const isToday = day.day === todayName()
             return (
               <motion.button
-                key={split.day}
-                className={`day-tile ${variant}`}
-                onClick={() => trainingDay && onSelectDay(trainingDay.id)}
-                disabled={isRest}
+                key={day.id}
+                className={`day-tile ${day.variant} ${isToday ? 'is-today' : ''}`}
+                onClick={() => onSelectDay(day.id)}
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.38, delay: 0.15 + i * 0.06 }}
-                whileHover={!isRest ? { y: -5 } : {}}
-                whileTap={!isRest ? { scale: 0.97 } : {}}
+                transition={{ duration: 0.38, delay: 0.2 + i * 0.06 }}
+                whileHover={{ y: -5 }}
+                whileTap={{ scale: 0.97 }}
               >
-                {/* Tile inner glow overlay */}
                 <span className="tile-glow" aria-hidden="true" />
+                <span className="tile-index" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
 
                 <div className="tile-top">
-                  <span className="tile-day">{split.day}</span>
-                  {!isRest && (
-                    <span className="tile-count">{trainingDay?.exercises.length} ex</span>
-                  )}
+                  <span className="tile-day">{day.day}</span>
+                  {isToday
+                    ? <span className="today-pill">Today</span>
+                    : <span className="tile-count">{day.exercises.length} ex</span>}
                 </div>
 
-                <div className="tile-title">{split.plan}</div>
+                <div className="tile-title">{day.title}</div>
+                <div className="tile-primary">{day.primary}</div>
 
-                {!isRest && trainingDay && (
-                  <>
-                    <div className="tile-meta">
-                      <span className="tile-badge">{trainingDay.type}</span>
-                    </div>
-                    <div className="tile-bar-wrap">
-                      <div className="tile-bar" style={{ width: `${trainingDay.intensity}%` }} />
-                    </div>
-                    <div className="tile-cta">
-                      Open workout <Zap size={12} />
-                    </div>
-                  </>
-                )}
-
-                {isRest && (
-                  <div className="tile-rest">
-                    <Moon size={28} />
-                    <span>Recovery Day</span>
-                  </div>
-                )}
+                <div className="tile-meta">
+                  <span className="tile-badge">{day.type}</span>
+                  <span className="tile-duration"><Timer size={11} />{day.estimatedDuration}m</span>
+                </div>
+                <div className="tile-bar-wrap" title={`Intensity ${day.intensity}%`}>
+                  <div className="tile-bar" style={{ width: `${day.intensity}%` }} />
+                </div>
+                <div className="tile-cta">
+                  Open workout <ArrowRight size={12} />
+                </div>
               </motion.button>
             )
           })}
         </div>
       </section>
 
-      {/* Notes */}
+      <motion.section
+        className="home-volume"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-60px' }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="section-label"><BarChart2 size={14} /><span>Weekly Volume · sets per muscle</span></div>
+        <div className="volume-table">
+          {weeklyVolume.map((entry, i) => {
+            const [lo, hi] = parseRange(entry.target)
+            return (
+              <div key={entry.muscle} className="volume-row">
+                <div className="vol-head">
+                  <span className="vol-muscle">{entry.muscle}</span>
+                  <span className="vol-sets">{entry.sets}<small> sets</small></span>
+                </div>
+                <div className="vol-bar-wrap">
+                  <span
+                    className="vol-target-band"
+                    style={{ left: `${(lo / VOLUME_SCALE) * 100}%`, width: `${((hi - lo) / VOLUME_SCALE) * 100}%` }}
+                    title={`Target ${entry.target}`}
+                  />
+                  <motion.div
+                    className="vol-bar"
+                    initial={{ width: 0 }}
+                    whileInView={{ width: `${Math.min(100, (entry.sets / VOLUME_SCALE) * 100)}%` }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: i * 0.05, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  />
+                </div>
+                <div className="vol-foot">
+                  <span>{entry.note}</span>
+                  <span className="vol-target">target {entry.target}</span>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </motion.section>
+
       <motion.section
         className="home-notes"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.7 }}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-60px' }}
+        transition={{ duration: 0.5 }}
       >
-        <div className="section-label"><Flame size={14} /><span>Training Notes</span></div>
-        <ul className="notes-list">
-          {importantNotes.map(note => (
-            <li key={note}>{note}</li>
+        <div className="section-label"><Flame size={14} /><span>Training Rules</span></div>
+        <ol className="notes-list">
+          {importantNotes.map((note, i) => (
+            <li key={note}><span className="note-num">{i + 1}</span>{note}</li>
           ))}
-        </ul>
+        </ol>
       </motion.section>
 
       <footer className="home-footer">
-        <span>3bdo Upper/Lower Program</span>
+        <span>3bdo · 7-Day V-Taper Program</span>
         <a href="https://wa.me/201064057506" target="_blank" rel="noreferrer">
           Developed by 3bdo
         </a>
