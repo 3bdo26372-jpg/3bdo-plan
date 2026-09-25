@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
-import { ArrowRight, BarChart2, Bike, Calendar, Dumbbell, Flame, Timer, Zap } from 'lucide-react'
+import { ArrowRight, BarChart2, Calendar, Dumbbell, Flame, Timer } from 'lucide-react'
 import { heroStats, importantNotes, trainingDays, weeklyVolume } from '../data'
-import { gifUrl, todayName, totalSets } from '../lib/format'
+import { todayName, totalSets } from '../lib/format'
 
 interface Props {
   onSelectDay: (id: string) => void
@@ -15,7 +15,6 @@ function parseRange(target: string): [number, number] {
 }
 
 export function ProgramHome({ onSelectDay }: Props) {
-  const today = trainingDays.find(d => d.day === todayName()) ?? trainingDays[0]
   const weekSets = trainingDays.reduce((sum, d) => sum + totalSets(d.exercises), 0)
   const weekCardio = trainingDays.reduce((sum, d) => sum + d.cardio.duration, 0)
 
@@ -58,30 +57,6 @@ export function ProgramHome({ onSelectDay }: Props) {
           </div>
         </motion.div>
 
-        <motion.button
-          className={`today-card ${today.variant}`}
-          onClick={() => onSelectDay(today.id)}
-          initial={{ opacity: 0, y: 32, scale: 0.97 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.55, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
-          whileHover={{ y: -4 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          <span className="today-label"><span className="pulse-dot" />Today · {today.day}</span>
-          <span className="today-title">{today.title}</span>
-          <span className="today-focus">{today.focus}</span>
-          <span className="today-meta">
-            <span><Zap size={13} />{today.exercises.length} exercises</span>
-            <span><Bike size={13} />{today.cardio.duration} min cardio</span>
-            <span><Timer size={13} />~{today.estimatedDuration} min</span>
-          </span>
-          <span className="today-thumbs">
-            {today.exercises.slice(0, 4).map(ex => ex.gif && (
-              <img key={ex.name} src={gifUrl(ex.gif)} alt="" loading="lazy" />
-            ))}
-          </span>
-          <span className="today-cta">View today's workout <ArrowRight size={16} /></span>
-        </motion.button>
       </section>
 
       <section className="days-grid-section">
