@@ -140,6 +140,17 @@ img { display: block; }
 }
 
 /* Variant shifts when on a day page */
+.bg-canvas.arms .orb-1 {
+  background: radial-gradient(circle,
+    rgba(168, 85, 247, 0.2) 0%,
+    rgba(168, 85, 247, 0.05) 60%,
+    transparent 100%);
+}
+.bg-canvas.arms .orb-2 {
+  background: radial-gradient(circle,
+    rgba(var(--blue-rgb), 0.16) 0%,
+    transparent 70%);
+}
 .bg-canvas.upper .orb-1 {
   background: radial-gradient(circle,
     rgba(var(--blue-rgb), 0.24) 0%,
@@ -179,12 +190,26 @@ img { display: block; }
 }
 
 /* ─── GYM ICON FLOATERS ──────────────────── */
+.bg-cast {
+  position: absolute;
+  inset: 0;
+}
+
 .gym-icon {
   position: absolute;
   pointer-events: none;
+  will-change: transform, opacity;
+}
+.gym-icon-inner {
+  width: 100%;
+  height: 100%;
   will-change: transform;
 }
-.gym-icon svg { width: 100%; height: 100%; }
+.gym-icon-inner svg { width: 100%; height: 100%; display: block; }
+
+@media (max-width: 640px) {
+  .gym-icon.desktop-only { display: none; }
+}
 
 @keyframes gym-anim-1 {
   0%,100% { transform: translateY(0px)   rotate(-15deg) scale(1);    }
@@ -1355,7 +1380,7 @@ img { display: block; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bg-orb, .gym-icon, .pulse-dot { animation: none !important; }
+  .bg-orb, .gym-icon-inner, .pulse-dot { animation: none !important; }
   *, *::before, *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;

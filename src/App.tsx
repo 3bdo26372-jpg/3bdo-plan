@@ -35,9 +35,7 @@ function App() {
 
   const activeDay = trainingDays.find(d => d.id === activeDayId) ?? null
   const activeIndex = trainingDays.findIndex(d => d.id === activeDayId)
-  const bgVariant = activeDay
-    ? activeDay.variant !== 'lower' ? 'upper' : 'lower'
-    : 'home'
+  const bgVariant = activeDay?.variant ?? 'home'
 
   const navigate = useCallback((id: string | null, d: Dir) => {
     setDir(d)
