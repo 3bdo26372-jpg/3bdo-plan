@@ -22,7 +22,6 @@
     "autoprefixer": "latest",
     "playwright": "^1.61.1",
     "postcss": "latest",
-    "tailwindcss": "3.4.17",
     "typescript": "latest"
   }
 }

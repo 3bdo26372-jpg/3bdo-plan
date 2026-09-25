@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Clock3, Dumbbell, Lightbulb, X } from 'lucide-react'
@@ -12,16 +12,35 @@ interface Props {
 }
 
 export function ExerciseModal({ exercise, variant, onClose }: Props) {
+  const cardRef = useRef<HTMLDivElement>(null)
+  // Keep the latest onClose without re-running the effect on every render.
+  const onCloseRef = useRef(onClose)
+  onCloseRef.current = onClose
+  const isOpen = exercise !== null
+
   useEffect(() => {
-    if (!exercise) return
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    if (!isOpen) return
+    const previouslyFocused = document.activeElement as HTMLElement | null
+    cardRef.current?.querySelector<HTMLElement>('.modal-close')?.focus()
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { onCloseRef.current(); return }
+      if (e.key !== 'Tab' || !cardRef.current) return
+      // Keep keyboard focus inside the dialog
+      const focusable = cardRef.current.querySelectorAll<HTMLElement>('button, [href], [tabindex]:not([tabindex="-1"])')
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus() }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus() }
+    }
     window.addEventListener('keydown', onKey)
     document.body.style.overflow = 'hidden'
     return () => {
       window.removeEventListener('keydown', onKey)
       document.body.style.overflow = ''
+      previouslyFocused?.focus()
     }
-  }, [exercise, onClose])
+  }, [isOpen])
 
   // Portal to <body>: the page wrapper is transformed during transitions,
   // which would otherwise break position: fixed.
@@ -36,6 +55,7 @@ export function ExerciseModal({ exercise, variant, onClose }: Props) {
           exit={{ opacity: 0 }}
         >
           <motion.div
+            ref={cardRef}
             className="modal-card"
             role="dialog"
             aria-modal="true"

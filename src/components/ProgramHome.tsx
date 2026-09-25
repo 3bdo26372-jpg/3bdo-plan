@@ -87,13 +87,10 @@ export function ProgramHome({ onSelectDay }: Props) {
 
                 <div className="tile-meta">
                   <span className="tile-badge">{day.type}</span>
-                  <span className="tile-duration"><Timer size={11} />{day.estimatedDuration}m</span>
+                  <span className="tile-duration"><Timer size={11} />{day.estimatedDuration}m · {day.intensity}%</span>
                 </div>
-                <div className="tile-bar-row">
-                  <div className="tile-bar-wrap" aria-hidden="true">
-                    <div className="tile-bar" style={{ width: `${day.intensity}%` }} />
-                  </div>
-                  <span className="tile-intensity">{day.intensity}%</span>
+                <div className="tile-bar-wrap" title={`Intensity ${day.intensity}%`} aria-hidden="true">
+                  <div className="tile-bar" style={{ width: `${day.intensity}%` }} />
                 </div>
                 <div className="tile-cta">
                   Open workout <ArrowRight size={12} />

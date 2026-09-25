@@ -39,17 +39,6 @@ export type WeeklyVolumeEntry = {
 // ─── Hero ────────────────────────────────────────────────────────────────────
 export const heroStats = ['7 Days / Week', 'V-Taper Focus', 'Wider Shoulders', 'Max 60 Min']
 
-// ─── Weekly Split ─────────────────────────────────────────────────────────────
-export const weeklySplit = [
-  { day: 'Day 1', plan: 'Back Heavy + Rear Delts' },
-  { day: 'Day 2', plan: 'Chest + Triceps' },
-  { day: 'Day 3', plan: 'Legs Heavy + Core' },
-  { day: 'Day 4', plan: 'Lateral Delts + Biceps' },
-  { day: 'Day 5', plan: 'Back Volume + Lateral Delts' },
-  { day: 'Day 6', plan: 'Legs Athletic + Core' },
-  { day: 'Day 7', plan: 'Arms + Core (Recovery)' },
-]
-
 // ─── Training Days ────────────────────────────────────────────────────────────
 export const trainingDays: TrainingDay[] = [
   // ── DAY 1 ─────────────────────────────────────────────────────────────────
@@ -73,7 +62,7 @@ export const trainingDays: TrainingDay[] = [
     exercises: [
       {
         name: 'Pull-Up / Lat Pulldown',
-        sets: '4',
+        sets: '4 × 6–8',
         rest: '2–3 min',
         muscles: ['Lats', 'Biceps'],
         note: "If pull-ups aren't available use a lat pulldown machine. Focus on full stretch at the top and driving elbows down.",

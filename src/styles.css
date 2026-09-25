@@ -67,13 +67,6 @@ img { display: block; }
   pointer-events: none;
 }
 
-.bg-particle-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
 .bg-grid {
   position: absolute;
   inset: 0;
@@ -1279,14 +1272,6 @@ img { display: block; }
 .day-nav-mini button { width: 44px; height: 44px; border-radius: var(--radius-sm); }
 .nav-btn { min-height: 48px; }
 
-.tile-intensity {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
-}
-.tile-bar-row { display: flex; align-items: center; gap: 10px; }
-.tile-bar-row .tile-bar-wrap { flex: 1; }
 
 @media (max-width: 640px) {
   /* Hero: get the week on screen sooner */
@@ -1296,6 +1281,10 @@ img { display: block; }
   .hero-sub    { margin-bottom: 16px; font-size: 14px; }
   .hero-chips  { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
   .hero-chips::-webkit-scrollbar { display: none; }
+  .hero-chips {
+    -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent);
+            mask-image: linear-gradient(90deg, #000 85%, transparent);
+  }
   .hero-chips span { white-space: nowrap; }
   .hero-numbers { margin-top: 20px; padding-top: 18px; }
   .days-grid-section { margin-bottom: 44px; }

@@ -7,7 +7,7 @@ import {
 export type BgVariant = 'home' | 'upper' | 'lower' | 'arms'
 
 // Microsoft Fluent Emoji 3D (MIT licensed), served from jsDelivr.
-const FLUENT = 'https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/'
+const FLUENT = 'https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/'
 
 const EMOJI = {
   biceps:   'Flexed%20biceps/Default/3D/flexed_biceps_3d_default.png',

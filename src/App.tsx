@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, MotionConfig, motion } from 'framer-motion'
 import { Background } from './components/Background'
 import { ProgramHome } from './components/ProgramHome'
 import { DayPage } from './components/DayPage'
@@ -72,6 +72,7 @@ function App() {
   }, [activeDay, goNext, goPrev, navigate])
 
   return (
+    <MotionConfig reducedMotion="user">
     <div className="app-root">
       <Background variant={bgVariant} />
       <AnimatePresence mode="wait" custom={dir} onExitComplete={() => window.scrollTo(0, 0)}>
@@ -113,6 +114,7 @@ function App() {
         )}
       </AnimatePresence>
     </div>
+    </MotionConfig>
   )
 }
 
