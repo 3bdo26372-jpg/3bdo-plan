@@ -3,106 +3,101 @@ import {
   AnimatePresence, motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform,
   type MotionValue,
 } from 'framer-motion'
-import { lighten, mix } from '../lib/color'
-import { ART, type ArtKey } from './gymArt'
 
 export type BgVariant = 'home' | 'upper' | 'lower' | 'arms'
 
-type Slot = 'figure' | 'gear'
+// Microsoft Fluent Emoji 3D (MIT licensed), served from jsDelivr.
+const FLUENT = 'https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/'
 
-interface GymElem {
-  slot: Slot
-  x: number; y: number
-  size: number
+const EMOJI = {
+  biceps:   'Flexed%20biceps/Default/3D/flexed_biceps_3d_default.png',
+  lifter:   'Person%20lifting%20weights/Default/3D/person_lifting_weights_3d_default.png',
+  runner:   'Person%20running/Default/3D/person_running_3d_default.png',
+  biker:    'Person%20biking/Default/3D/person_biking_3d_default.png',
+  leg:      'Leg/Default/3D/leg_3d_default.png',
+  fire:     'Fire/3D/fire_3d.png',
+  bolt:     'High%20voltage/3D/high_voltage_3d.png',
+  trophy:   'Trophy/3D/trophy_3d.png',
+  medal:    '1st%20place%20medal/3D/1st_place_medal_3d.png',
+  stopwatch:'Stopwatch/3D/stopwatch_3d.png',
+  hundred:  'Hundred%20points/3D/hundred_points_3d.png',
+  heart:    'Anatomical%20heart/3D/anatomical_heart_3d.png',
+  rocket:   'Rocket/3D/rocket_3d.png',
+  droplet:  'Droplet/3D/droplet_3d.png',
+  chicken:  'Poultry%20leg/3D/poultry_leg_3d.png',
+} as const
+
+type EmojiKey = keyof typeof EMOJI
+
+// Each page type gets its own cast; slots below cycle through it.
+const CAST: Record<BgVariant, EmojiKey[]> = {
+  home:  ['stopwatch', 'fire', 'bolt', 'lifter', 'medal', 'hundred', 'runner', 'biceps', 'rocket', 'trophy', 'chicken', 'droplet'],
+  upper: ['bolt', 'fire', 'medal', 'lifter', 'hundred', 'rocket', 'trophy', 'biceps'],
+  lower: ['stopwatch', 'fire', 'droplet', 'runner', 'heart', 'bolt', 'biker', 'leg'],
+  arms:  ['bolt', 'fire', 'medal', 'biceps', 'hundred', 'chicken', 'trophy', 'lifter'],
+}
+
+interface Slot {
+  x: number; y: number     // % of viewport
+  size: number             // px
+  depth: number            // 0 = far (small, blurred, slow) … 1 = near (big, sharp, fast)
   anim: 1 | 2 | 3 | 4
-  opacity: number
   delay: number
-  depth: number   // parallax strength: 0 = static, 1 = strong
   desktopOnly?: boolean
 }
 
-const ELEMENTS: GymElem[] = [
-  { slot: 'figure', x:  3, y:  6, size: 150, anim: 1, opacity: 0.16, delay: 0.0, depth: 0.35 },
-  { slot: 'gear',   x: 80, y:  3, size: 130, anim: 2, opacity: 0.14, delay: 2.0, depth: 0.15 },
-  { slot: 'figure', x: 70, y: 17, size: 125, anim: 3, opacity: 0.13, delay: 0.8, depth: 0.5, desktopOnly: true },
-  { slot: 'gear',   x:  1, y: 34, size: 105, anim: 4, opacity: 0.12, delay: 3.2, depth: 0.25 },
-  { slot: 'figure', x: 86, y: 38, size: 140, anim: 1, opacity: 0.15, delay: 1.5, depth: 0.4 },
-  { slot: 'gear',   x: 44, y: 50, size:  95, anim: 2, opacity: 0.09, delay: 4.0, depth: 0.1, desktopOnly: true },
-  { slot: 'figure', x:  6, y: 60, size: 135, anim: 3, opacity: 0.14, delay: 0.4, depth: 0.45 },
-  { slot: 'gear',   x: 78, y: 62, size: 120, anim: 4, opacity: 0.13, delay: 2.6, depth: 0.2 },
-  { slot: 'gear',   x: 30, y: 80, size:  90, anim: 1, opacity: 0.11, delay: 1.0, depth: 0.3, desktopOnly: true },
-  { slot: 'figure', x: 64, y: 80, size: 130, anim: 2, opacity: 0.14, delay: 3.5, depth: 0.5 },
-  { slot: 'gear',   x: 12, y: 88, size: 100, anim: 3, opacity: 0.12, delay: 2.2, depth: 0.2 },
-  { slot: 'figure', x: 90, y: 86, size: 110, anim: 4, opacity: 0.12, delay: 0.2, depth: 0.35, desktopOnly: true },
-  { slot: 'gear',   x: 55, y: 20, size:  70, anim: 2, opacity: 0.10, delay: 5.0, depth: 0.6, desktopOnly: true },
-  { slot: 'figure', x: 22, y: 44, size: 115, anim: 1, opacity: 0.10, delay: 6.0, depth: 0.25, desktopOnly: true },
+// Kept mostly to the edges so the content column stays clean.
+const SLOTS: Slot[] = [
+  { x: 42, y:  1, size: 104, depth: 0.9, anim: 1, delay: 0.0, desktopOnly: true },
+  { x: 84, y:  5, size:  96, depth: 0.6, anim: 2, delay: 1.2 },
+  { x: 62, y: 16, size:  54, depth: 0.2, anim: 3, delay: 2.4, desktopOnly: true },
+  { x: 90, y: 30, size: 110, depth: 0.8, anim: 4, delay: 0.6 },
+  { x:  1, y: 38, size:  64, depth: 0.3, anim: 2, delay: 3.0 },
+  { x: 36, y: 30, size:  44, depth: 0.1, anim: 1, delay: 4.2, desktopOnly: true },
+  { x: 12, y: 58, size: 100, depth: 0.7, anim: 3, delay: 1.8, desktopOnly: true },
+  { x: 80, y: 56, size:  70, depth: 0.35, anim: 1, delay: 2.8 },
+  { x: 48, y: 70, size:  48, depth: 0.15, anim: 4, delay: 0.9, desktopOnly: true },
+  { x: 88, y: 78, size: 124, depth: 1.0, anim: 2, delay: 3.6 },
+  { x:  4, y: 82, size:  86, depth: 0.55, anim: 4, delay: 2.1 },
+  { x: 66, y: 90, size:  58, depth: 0.25, anim: 3, delay: 4.8, desktopOnly: true },
 ]
 
-// Each page type gets its own cast of characters.
-const CAST: Record<BgVariant, Record<Slot, ArtKey[]>> = {
-  home:  { figure: ['lateral', 'squat', 'pullup', 'runner', 'curl'], gear: ['dumbbell', 'barbell', 'kettlebell', 'plate', 'heart', 'timer'] },
-  upper: { figure: ['pullup', 'lateral', 'curl'],                    gear: ['dumbbell', 'barbell', 'plate', 'timer'] },
-  lower: { figure: ['squat', 'runner'],                              gear: ['kettlebell', 'barbell', 'plate', 'heart'] },
-  arms:  { figure: ['curl', 'lateral'],                              gear: ['dumbbell', 'timer', 'plate', 'heart'] },
-}
-
-// Deep Ocean palette
-const PRIMARY = '#22d3ee'
-const SECONDARY = '#3b82f6'
-const VIOLET = '#a855f7'
-
-const COLORS: Record<BgVariant, string[]> = {
-  home:  [PRIMARY, SECONDARY, mix(PRIMARY, SECONDARY, 0.5)],
-  upper: [SECONDARY, lighten(SECONDARY, 0.3), mix(SECONDARY, PRIMARY, 0.3)],
-  lower: [PRIMARY, lighten(PRIMARY, 0.25), mix(PRIMARY, SECONDARY, 0.4)],
-  arms:  [VIOLET, lighten(VIOLET, 0.25), mix(VIOLET, SECONDARY, 0.4)],
-}
-
-function castFor(variant: BgVariant) {
-  const counters: Record<Slot, number> = { figure: 0, gear: 0 }
-  return ELEMENTS.map(el => {
-    const list = CAST[variant][el.slot]
-    return list[counters[el.slot]++ % list.length]
-  })
-}
-
 interface FloaterProps {
-  el: GymElem
-  art: ArtKey
-  color: string
+  slot: Slot
+  emoji: EmojiKey
   index: number
   scrollY: MotionValue<number>
   pointerX: MotionValue<number>
   pointerY: MotionValue<number>
 }
 
-function Floater({ el, art, color, index, scrollY, pointerX, pointerY }: FloaterProps) {
-  const Art = ART[art]
-  const x = useTransform(pointerX, p => p * el.depth * 36)
-  const y = useTransform<number, number>([scrollY, pointerY], ([s, p]) => -s * el.depth * 0.35 + p * el.depth * 28)
+function Floater({ slot, emoji, index, scrollY, pointerX, pointerY }: FloaterProps) {
+  const x = useTransform(pointerX, p => p * slot.depth * 40)
+  const y = useTransform<number, number>([scrollY, pointerY], ([s, p]) => -s * slot.depth * 0.4 + p * slot.depth * 30)
+  const blur = (1 - slot.depth) * 3.5
+  const opacity = 0.3 + slot.depth * 0.4
 
   return (
     <motion.div
-      className={`gym-icon ${el.desktopOnly ? 'desktop-only' : ''}`}
-      style={{ left: `${el.x}%`, top: `${el.y}%`, width: el.size, height: el.size, x, y, color }}
-      initial={{ opacity: 0, scale: 0.6, rotate: -8 }}
-      animate={{ opacity: el.opacity, scale: 1, rotate: 0 }}
-      exit={{ opacity: 0, scale: 0.8 }}
-      transition={{ duration: 0.9, delay: index * 0.04, ease: [0.25, 0.46, 0.45, 0.94] }}
+      className={`emoji-float ${slot.desktopOnly ? 'desktop-only' : ''}`}
+      style={{ left: `${slot.x}%`, top: `${slot.y}%`, width: slot.size, height: slot.size, x, y, zIndex: Math.round(slot.depth * 10) }}
+      initial={{ opacity: 0, scale: 0.4, rotate: -20 }}
+      animate={{ opacity, scale: 1, rotate: 0 }}
+      exit={{ opacity: 0, scale: 0.6, rotate: 15 }}
+      transition={{ type: 'spring', stiffness: 120, damping: 14, delay: index * 0.05 }}
     >
       <div
-        className={`gym-icon-inner anim-${el.anim}`}
-        style={{ animationDelay: `${el.delay}s`, filter: `drop-shadow(0 0 10px ${color}90)` }}
+        className={`emoji-inner anim-${slot.anim}`}
+        style={{ animationDelay: `${slot.delay}s`, filter: blur > 0.4 ? `blur(${blur.toFixed(1)}px)` : undefined }}
       >
-        <Art />
+        <img src={FLUENT + EMOJI[emoji]} alt="" draggable={false} loading="lazy" decoding="async" />
       </div>
     </motion.div>
   )
 }
 
 export function Background({ variant = 'home' }: { variant?: BgVariant }) {
-  const palette = COLORS[variant]
-  const cast = castFor(variant)
+  const cast = CAST[variant]
   const reduceMotion = useReducedMotion()
 
   const { scrollY } = useScroll()
@@ -128,6 +123,7 @@ export function Background({ variant = 'home' }: { variant?: BgVariant }) {
       <div className="bg-orb orb-1" />
       <div className="bg-orb orb-2" />
       <div className="bg-orb orb-3" />
+      <div className="bg-grid" />
 
       <AnimatePresence>
         <motion.div
@@ -136,14 +132,13 @@ export function Background({ variant = 'home' }: { variant?: BgVariant }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.5 }}
         >
-          {ELEMENTS.map((el, i) => (
+          {SLOTS.map((slot, i) => (
             <Floater
               key={i}
-              el={el}
-              art={cast[i]}
-              color={palette[i % palette.length]}
+              slot={slot}
+              emoji={cast[i % cast.length]}
               index={i}
               scrollY={reduceMotion ? still : scrollY}
               pointerX={reduceMotion ? still : pointerX}
@@ -153,7 +148,6 @@ export function Background({ variant = 'home' }: { variant?: BgVariant }) {
         </motion.div>
       </AnimatePresence>
 
-      <div className="bg-grid" />
       <div className="bg-vignette" />
     </div>
   )
