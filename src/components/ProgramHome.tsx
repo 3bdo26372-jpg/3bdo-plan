@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { ArrowRight, BarChart2, Calendar, Dumbbell, Flame, Timer } from 'lucide-react'
 import { heroStats, importantNotes, trainingDays, weeklyVolume } from '../data'
-import { todayName, totalSets } from '../lib/format'
+import { totalSets } from '../lib/format'
 
 interface Props {
   onSelectDay: (id: string) => void
@@ -63,11 +63,10 @@ export function ProgramHome({ onSelectDay }: Props) {
         <div className="section-label"><Calendar size={14} /><span>The Week</span></div>
         <div className="days-grid">
           {trainingDays.map((day, i) => {
-            const isToday = day.day === todayName()
             return (
               <motion.button
                 key={day.id}
-                className={`day-tile ${day.variant} ${isToday ? 'is-today' : ''}`}
+                className={`day-tile ${day.variant}`}
                 onClick={() => onSelectDay(day.id)}
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -80,9 +79,7 @@ export function ProgramHome({ onSelectDay }: Props) {
 
                 <div className="tile-top">
                   <span className="tile-day">{day.day}</span>
-                  {isToday
-                    ? <span className="today-pill">Today</span>
-                    : <span className="tile-count">{day.exercises.length} ex</span>}
+                  <span className="tile-count">{day.exercises.length} ex</span>
                 </div>
 
                 <div className="tile-title">{day.title}</div>
@@ -92,8 +89,11 @@ export function ProgramHome({ onSelectDay }: Props) {
                   <span className="tile-badge">{day.type}</span>
                   <span className="tile-duration"><Timer size={11} />{day.estimatedDuration}m</span>
                 </div>
-                <div className="tile-bar-wrap" title={`Intensity ${day.intensity}%`}>
-                  <div className="tile-bar" style={{ width: `${day.intensity}%` }} />
+                <div className="tile-bar-row">
+                  <div className="tile-bar-wrap" aria-hidden="true">
+                    <div className="tile-bar" style={{ width: `${day.intensity}%` }} />
+                  </div>
+                  <span className="tile-intensity">{day.intensity}%</span>
                 </div>
                 <div className="tile-cta">
                   Open workout <ArrowRight size={12} />

@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowLeft, ArrowRight, Bike, ChevronLeft, Flame, LayoutGrid, Ruler, Target, Timer, Zap } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ChevronLeft, Footprints, Flame, LayoutGrid, Ruler, Target, Timer, Zap } from 'lucide-react'
 import type { Exercise, TrainingDay } from '../data'
-import { todayName, totalSets } from '../lib/format'
+import { totalSets } from '../lib/format'
 import { ExerciseRow } from './ExerciseRow'
 import { ExerciseModal } from './ExerciseModal'
 
@@ -19,7 +19,6 @@ interface Props {
 
 export function DayPage({ day, index, total, hasPrev, hasNext, onBack, onPrev, onNext }: Props) {
   const [openExercise, setOpenExercise] = useState<Exercise | null>(null)
-  const isToday = day.day === todayName()
   const sets = totalSets(day.exercises)
 
   return (
@@ -48,8 +47,7 @@ export function DayPage({ day, index, total, hasPrev, hasNext, onBack, onPrev, o
 
       <header className="day-header">
         <div className="day-kicker">
-          <span>Day {index + 1} · {day.day}</span>
-          {isToday && <span className="today-pill">Today</span>}
+          <span>{day.day} of {total} · {day.type}</span>
         </div>
         <h1 className="day-title">{day.title}</h1>
         <p className="day-focus">{day.focus}</p>
@@ -66,7 +64,7 @@ export function DayPage({ day, index, total, hasPrev, hasNext, onBack, onPrev, o
             <span>Exercises · {sets} sets</span>
           </div>
           <div className="summary-stat">
-            <Bike size={16} />
+            <Footprints size={16} />
             <strong>{day.cardio.duration} min</strong>
             <span>Cardio</span>
           </div>
@@ -121,7 +119,7 @@ export function DayPage({ day, index, total, hasPrev, hasNext, onBack, onPrev, o
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.3 }}
         >
-          <div className="cardio-icon"><Bike size={22} /></div>
+          <div className="cardio-icon"><Footprints size={22} /></div>
           <div className="cardio-body">
             <span className="cardio-label">Finish with cardio</span>
             <div className="cardio-type">{day.cardio.type}</div>

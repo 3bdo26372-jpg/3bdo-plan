@@ -41,13 +41,13 @@ export const heroStats = ['7 Days / Week', 'V-Taper Focus', 'Wider Shoulders', '
 
 // ─── Weekly Split ─────────────────────────────────────────────────────────────
 export const weeklySplit = [
-  { day: 'Saturday',  plan: 'Back Heavy + Rear Delts' },
-  { day: 'Sunday',    plan: 'Chest + Triceps' },
-  { day: 'Monday',    plan: 'Legs Heavy + Core' },
-  { day: 'Tuesday',   plan: 'Lateral Delts + Biceps' },
-  { day: 'Wednesday', plan: 'Back Volume + Lateral Delts' },
-  { day: 'Thursday',  plan: 'Legs Athletic + Core' },
-  { day: 'Friday',    plan: 'Arms + Core (Recovery)' },
+  { day: 'Day 1', plan: 'Back Heavy + Rear Delts' },
+  { day: 'Day 2', plan: 'Chest + Triceps' },
+  { day: 'Day 3', plan: 'Legs Heavy + Core' },
+  { day: 'Day 4', plan: 'Lateral Delts + Biceps' },
+  { day: 'Day 5', plan: 'Back Volume + Lateral Delts' },
+  { day: 'Day 6', plan: 'Legs Athletic + Core' },
+  { day: 'Day 7', plan: 'Arms + Core (Recovery)' },
 ]
 
 // ─── Training Days ────────────────────────────────────────────────────────────
@@ -55,7 +55,7 @@ export const trainingDays: TrainingDay[] = [
   // ── DAY 1 ─────────────────────────────────────────────────────────────────
   {
     id: 'day-1',
-    day: 'Saturday',
+    day: 'Day 1',
     title: 'Back Heavy + Rear Delts',
     type: 'Strength',
     focus: 'Lat width, upper back thickness, rear delt detail',
@@ -65,9 +65,9 @@ export const trainingDays: TrainingDay[] = [
     secondary: 'Rear Delts',
     widthFocus: 'Lateral Delts (4 sets)',
     cardio: {
-      type: 'Rowing Machine',
+      type: 'Incline Treadmill Walk',
       duration: 10,
-      note: 'Steady pace — activates lats and upper back as warm-down',
+      note: 'Steady incline pace — easy on the lower back after heavy pulling.',
     },
     estimatedDuration: 56,
     exercises: [
@@ -105,7 +105,7 @@ export const trainingDays: TrainingDay[] = [
   // ── DAY 2 ─────────────────────────────────────────────────────────────────
   {
     id: 'day-2',
-    day: 'Sunday',
+    day: 'Day 2',
     title: 'Chest + Triceps',
     type: 'Strength',
     focus: 'Upper chest push, tricep lockout, light lat pump',
@@ -115,9 +115,9 @@ export const trainingDays: TrainingDay[] = [
     secondary: 'Triceps',
     widthFocus: 'Lats (3 sets — light pump)',
     cardio: {
-      type: 'Incline Treadmill Walk',
+      type: 'StairMaster',
       duration: 10,
-      note: 'Low impact, keeps heart rate elevated without taxing chest/tri recovery',
+      note: 'Moderate steady pace — keeps heart rate up without taxing chest/triceps recovery.',
     },
     estimatedDuration: 58,
     exercises: [
@@ -162,7 +162,7 @@ export const trainingDays: TrainingDay[] = [
   // ── DAY 3 ─────────────────────────────────────────────────────────────────
   {
     id: 'day-3',
-    day: 'Monday',
+    day: 'Day 3',
     title: 'Legs Heavy + Core',
     type: 'Strength',
     focus: 'Quad/hamstring strength, athletic performance, core stability',
@@ -172,9 +172,9 @@ export const trainingDays: TrainingDay[] = [
     secondary: 'Glutes / Core',
     widthFocus: 'N/A — leg day',
     cardio: {
-      type: 'Stationary Bike',
+      type: 'Incline Treadmill Walk',
       duration: 10,
-      note: 'Moderate resistance. Keeps blood in the legs for recovery — not a sprint.',
+      note: 'Easy incline walk — flushes the legs after heavy lifts without adding fatigue.',
     },
     estimatedDuration: 57,
     exercises: [
@@ -226,7 +226,7 @@ export const trainingDays: TrainingDay[] = [
   // ── DAY 4 ─────────────────────────────────────────────────────────────────
   {
     id: 'day-4',
-    day: 'Tuesday',
+    day: 'Day 4',
     title: 'Lateral Delts + Biceps',
     type: 'Hypertrophy',
     focus: 'V-taper width, rear delt detail, arm peak',
@@ -236,9 +236,9 @@ export const trainingDays: TrainingDay[] = [
     secondary: 'Rear Delts / Biceps',
     widthFocus: 'Rear Delts (7 sets)',
     cardio: {
-      type: 'Elliptical',
+      type: 'StairMaster',
       duration: 10,
-      note: 'Low impact — keeps arms free for the session, minimal systemic fatigue',
+      note: 'Steady climb, light hand support only — keeps shoulders and arms relaxed.',
     },
     estimatedDuration: 50,
     exercises: [
@@ -290,7 +290,7 @@ export const trainingDays: TrainingDay[] = [
   // ── DAY 5 ─────────────────────────────────────────────────────────────────
   {
     id: 'day-5',
-    day: 'Wednesday',
+    day: 'Day 5',
     title: 'Back Volume + Lateral Delts',
     type: 'Hypertrophy',
     focus: 'Lat width, back thickness volume, shoulder width pump',
@@ -300,9 +300,9 @@ export const trainingDays: TrainingDay[] = [
     secondary: 'Lateral Delts',
     widthFocus: 'Lats (11 sets)',
     cardio: {
-      type: 'Elliptical',
+      type: 'StairMaster',
       duration: 10,
-      note: 'Active recovery — upper body involved lightly, keeps blood flowing',
+      note: 'Steady climb — stand tall, hold the rails lightly, keep blood flowing.',
     },
     estimatedDuration: 49,
     exercises: [
@@ -340,7 +340,7 @@ export const trainingDays: TrainingDay[] = [
   // ── DAY 6 ─────────────────────────────────────────────────────────────────
   {
     id: 'day-6',
-    day: 'Thursday',
+    day: 'Day 6',
     title: 'Legs Athletic + Core',
     type: 'Athletic',
     focus: 'Unilateral strength, glute power, core anti-rotation',
@@ -350,9 +350,9 @@ export const trainingDays: TrainingDay[] = [
     secondary: 'Hamstrings / Core',
     widthFocus: 'N/A — leg day',
     cardio: {
-      type: 'Stationary Bike',
+      type: 'Incline Treadmill Walk',
       duration: 10,
-      note: 'Higher cadence than Day 3 — more athletic, less load',
+      note: 'Brisk incline walk — conversational pace, legs are already worked.',
     },
     estimatedDuration: 53,
     exercises: [
@@ -404,7 +404,7 @@ export const trainingDays: TrainingDay[] = [
   // ── DAY 7 ─────────────────────────────────────────────────────────────────
   {
     id: 'day-7',
-    day: 'Friday',
+    day: 'Day 7',
     title: 'Arms + Core (Recovery)',
     type: 'Recovery',
     focus: 'Active recovery, arm volume, rear delt finishing, core stability',
