@@ -7,7 +7,7 @@ interface Props {
   onSelectDay: (id: string) => void
 }
 
-const VOLUME_SCALE = 24
+const VOLUME_SCALE = 22
 
 function parseRange(target: string): [number, number] {
   const [lo, hi] = target.split(/[–-]/).map(Number)
@@ -35,9 +35,9 @@ export function ProgramHome({ onSelectDay }: Props) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
-          <div className="hero-eyebrow"><Flame size={14} /><span>Muscle Build · V-Taper · Daily Cardio</span></div>
+          <div className="hero-eyebrow"><Flame size={14} /><span>Upper-Body Width · V-Taper · Daily Cardio</span></div>
           <h1 className="hero-h1">Your <span>Program.</span></h1>
-          <p className="hero-sub">180 cm · 120 kg · 7 days / week · Max 60 min · Low-back aware</p>
+          <p className="hero-sub">180 cm · 120 kg · 7 days / week · Max 60 min · Lumbar-disc safe</p>
           <div className="hero-chips">
             {heroStats.map((s, i) => (
               <motion.span

@@ -1037,6 +1037,29 @@ img { display: block; }
   color: var(--amber);
 }
 
+/* Swap-in option when the machine is busy or unavailable */
+.ex-alt {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 8px 12px;
+  border-radius: var(--radius-xs);
+  border: 1px dashed rgba(var(--accent-rgb), 0.35);
+  background: rgba(var(--accent-rgb), 0.05);
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.ex-alt svg { flex-shrink: 0; margin-top: 1px; color: var(--accent); }
+.ex-alt strong {
+  color: var(--accent);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  margin-right: 4px;
+}
+
 /* ─── CARDIO BLOCK ───────────────────────── */
 .cardio-block {
   display: grid;

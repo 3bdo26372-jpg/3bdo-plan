@@ -1,4 +1,4 @@
-import { Clock3, Dumbbell, Lightbulb, Maximize2 } from 'lucide-react'
+import { Clock3, Dumbbell, Lightbulb, Maximize2, Repeat2 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import type { Exercise } from '../data'
 import { gifUrl, parseReps, parseSetCount } from '../lib/format'
@@ -58,6 +58,7 @@ export function ExerciseRow({ exercise, index, variant, onOpen }: Props) {
         </div>
 
         <p className="ex-note"><Lightbulb size={14} />{exercise.note}</p>
+        <p className="ex-alt"><Repeat2 size={14} /><span><strong>Alternative:</strong> {exercise.alternative}</span></p>
       </div>
     </motion.article>
   )

@@ -54,9 +54,16 @@ function App() {
   }, [activeIndex, navigate])
 
   useEffect(() => {
+    // popstate covers the back/forward buttons; hashchange covers a #/day-3
+    // link opened while the app is already on screen (same-document navigation,
+    // which fires no popstate).
     const onPop = () => { setDir(0); setActiveDayId(dayFromHash()) }
     window.addEventListener('popstate', onPop)
-    return () => window.removeEventListener('popstate', onPop)
+    window.addEventListener('hashchange', onPop)
+    return () => {
+      window.removeEventListener('popstate', onPop)
+      window.removeEventListener('hashchange', onPop)
+    }
   }, [])
 
   useEffect(() => {

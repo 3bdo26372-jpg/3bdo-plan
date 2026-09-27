@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Clock3, Dumbbell, Lightbulb, X } from 'lucide-react'
+import { Clock3, Dumbbell, Lightbulb, Repeat2, X } from 'lucide-react'
 import type { Exercise } from '../data'
 import { gifUrl, parseReps, parseSetCount } from '../lib/format'
 
@@ -87,6 +87,7 @@ export function ExerciseModal({ exercise, variant, onClose }: Props) {
                 {exercise.muscles.map(m => <span key={m}>{m}</span>)}
               </div>
               <p className="ex-note"><Lightbulb size={14} />{exercise.note}</p>
+              <p className="ex-alt"><Repeat2 size={14} /><span><strong>Alternative:</strong> {exercise.alternative}</span></p>
             </div>
           </motion.div>
         </motion.div>
